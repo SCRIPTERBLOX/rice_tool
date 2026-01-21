@@ -36,6 +36,55 @@ def on_activate(app):
     colors_bar = Gtk.Grid()
     colors_bar.attach(outline_col_box, 0, 0, 1, 1)
 
+
+    waybar_col_label = Gtk.Label(label="Waybar text color")
+    waybar_col_r_label = Gtk.Label(label="R")
+    waybar_col_g_label = Gtk.Label(label="G")
+    waybar_col_b_label = Gtk.Label(label="B")
+    waybar_col_r_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 255, 1)
+    waybar_col_r_scale.set_hexpand(True)
+    waybar_col_g_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 255, 1)
+    waybar_col_r_scale.set_hexpand(True)
+    waybar_col_b_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 255, 1)
+    waybar_col_r_scale.set_hexpand(True)
+    
+    waybar_col_box = Gtk.Grid()
+    waybar_col_box.attach(waybar_col_label, 0, 0, 2, 1)
+    waybar_col_box.attach(waybar_col_r_label, 0, 1, 1, 1)
+    waybar_col_box.attach(waybar_col_g_label, 0, 2, 1, 1)
+    waybar_col_box.attach(waybar_col_b_label, 0, 3, 1, 1)
+
+    waybar_col_box.attach(waybar_col_r_scale, 1, 1, 1, 1)
+    waybar_col_box.attach(waybar_col_g_scale, 1, 2, 1, 1)
+    waybar_col_box.attach(waybar_col_b_scale, 1, 3, 1, 1)
+
+
+    waybar_background_label = Gtk.Label(label="Waybar background color")
+    waybar_background_r_label = Gtk.Label(label="R")
+    waybar_background_g_label = Gtk.Label(label="G")
+    waybar_background_b_label = Gtk.Label(label="B")
+    waybar_background_r_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 255, 1)
+    waybar_background_r_scale.set_hexpand(True)
+    waybar_background_g_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 255, 1)
+    waybar_background_r_scale.set_hexpand(True)
+    waybar_background_b_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 255, 1)
+    waybar_background_r_scale.set_hexpand(True)
+    
+    waybar_background_box = Gtk.Grid()
+    waybar_background_box.attach(waybar_background_label, 0, 0, 2, 1)
+    waybar_background_box.attach(waybar_background_r_label, 0, 1, 1, 1)
+    waybar_background_box.attach(waybar_background_g_label, 0, 2, 1, 1)
+    waybar_col_box.attach(waybar_background_b_label, 0, 3, 1, 1)
+
+    waybar_background_box.attach(waybar_background_r_scale, 1, 1, 1, 1)
+    waybar_background_box.attach(waybar_background_g_scale, 1, 2, 1, 1)
+    waybar_background_box.attach(waybar_background_b_scale, 1, 3, 1, 1)
+
+    
+    colors_bar = Gtk.Grid()
+    colors_bar.attach(outline_col_box, 0, 0, 1, 1)
+    colors_bar.attach(waybar_col_box, 0, 1, 1, 1)
+    colors_bar.attach(waybar_background_box, 0, 2, 1, 1)
     
     outline_thickness_label = Gtk.Label(label="Outline Thickness")
     outline_thickness_selector = Gtk.SpinButton()
@@ -44,12 +93,14 @@ def on_activate(app):
     outline_thickness.attach(outline_thickness_label, 0, 0, 1, 1)
     outline_thickness.attach(outline_thickness_selector, 0, 1, 1, 1)
 
+
     outline_roundness_label = Gtk.Label(label="Outline Roundness")
     outline_roundness_selector = Gtk.SpinButton()
     
     outline_roundness = Gtk.Grid()
     outline_roundness.attach(outline_roundness_label, 0, 0, 1, 1)
     outline_roundness.attach(outline_roundness_selector, 0, 1, 1, 1)
+
 
     values = Gtk.Grid()
     values.attach(outline_thickness, 0, 0, 1, 1)

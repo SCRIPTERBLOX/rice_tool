@@ -18,8 +18,8 @@
     - [ ] Hyprland
     - [ ] Waybar
 - [ ] Waybar text color
-  - [ ] Visual
+  - [x] Visual
   - [ ] Functional
 - [ ] Waybar background color
-  - [ ] Visual
+  - [x] Visual
   - [ ] Functional
