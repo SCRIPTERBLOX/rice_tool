@@ -6,20 +6,20 @@
   - [x] Visual
   - [ ] Functional
     - [ ] Hyprland
-    - [ ] Waybar
+    - [x] Waybar
 - [ ] Hyprland/Waybar outline thickness
   - [x] Visual
   - [ ] Functional
     - [ ] Hyprland
-    - [ ] Waybar
+    - [x] Waybar
 - [ ] Hyprland/Waybar outline roundness
   - [x] Visual
   - [ ] Functional
     - [ ] Hyprland
     - [ ] Waybar
-- [ ] Waybar text color
+- [x] Waybar text color
   - [x] Visual
-  - [ ] Functional
-- [ ] Waybar background color
+  - [x] Functional
+- [x] Waybar background color
   - [x] Visual
-  - [ ] Functional
+  - [x] Functional
