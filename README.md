@@ -2,21 +2,21 @@
 
 ## Planned controlls
 
-- [ ] Hyprland/Waybar outline color
+- [x] Hyprland/Waybar outline color
   - [x] Visual
-  - [ ] Functional
-    - [ ] Hyprland
+  - [x] Functional
+    - [x] Hyprland
     - [x] Waybar
-- [ ] Hyprland/Waybar outline thickness
+- [x] Hyprland/Waybar outline thickness
   - [x] Visual
-  - [ ] Functional
-    - [ ] Hyprland
+  - [x] Functional
+    - [x] Hyprland
     - [x] Waybar
-- [ ] Hyprland/Waybar outline roundness
+- [x] Hyprland/Waybar outline roundness
   - [x] Visual
-  - [ ] Functional
-    - [ ] Hyprland
-    - [ ] Waybar
+  - [x] Functional
+    - [x] Hyprland
+    - [x] Waybar
 - [x] Waybar text color
   - [x] Visual
   - [x] Functional

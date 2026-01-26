@@ -1,4 +1,7 @@
+from ast import match_case
 import math
+from re import split
+import subprocess
 
 import gi
 gi.require_version("Gtk", "4.0")
@@ -22,14 +25,49 @@ bg_a = 0
 outline_thickness_v = 5
 outline_roundness_v = 5
 
+
+def on_init():
+    with open("/home/scripterblox/.tile.conf", "r") as file:
+        for line in file:
+            l = line.strip()
+            split_line = l.split(' ')
+
+            match split_line[0]:
+                case "outl_col":
+                    global outline_r, outline_g, outline_b, outline_a
+                    outline_r = int(split_line[1])
+                    outline_g = int(split_line[2])
+                    outline_b = int(split_line[3])
+                    outline_a = int(split_line[4])
+                case "txt_col":
+                    global txt_r, txt_g, txt_b, txt_a
+                    txt_r = int(split_line[1])
+                    txt_g = int(split_line[2])
+                    txt_b = int(split_line[3])
+                    txt_a = int(split_line[4])
+                case "bg_r":
+                    global bg_r, bg_g, bg_b, bg_a
+                    bg_r = int(split_line[1])
+                    bg_g = int(split_line[2])
+                    bg_b = int(split_line[3])
+                    bg_a = int(split_line[4])
+                case "thick":
+                    global outline_thickness_v
+                    outline_thickness_v = int(split_line[1])
+                case "round":
+                    global outline_roundness_v
+                    outline_roundness_v = int(split_line[1])
+
+
 class RiceTool(Gtk.Application):
     def __init__(self) -> None:
         super().__init__(application_id="io.scripterblox.rice_tool")
         GLib.set_application_name("Hyprland Ricing Tool")
+        on_init()
 
     def applyf(abc1, abc2):
-        waybar_file = """
-@define-color txt_main rgba("""+str(txt_r)+""", """+str(txt_g)+""", """+str(txt_b)+""", """+str(txt_a)+""");
+        # Handle waybar
+        waybar_file = """@define-color txt_main rgba("""+str(txt_r)+""", """+str(txt_g)+""", """+str(txt_b)+""", """+str(txt_a)+""");
 @define-color outline rgba("""+str(math.ceil(outline_r))+""", """+str(math.ceil(outline_g))+""", """+str(math.ceil(outline_b))+""", """+str(outline_a)+""");
         @define-color bg rgba("""+str(math.ceil(bg_r))+""", """+str(math.ceil(bg_g))+""", """+str(math.ceil(bg_b))+""", """+str(bg_a)+""");
 
@@ -46,11 +84,42 @@ class RiceTool(Gtk.Application):
 #tray,
 #custom-power { 
   border: """+str(outline_thickness_v)+"""px solid @outline;
+  border-radius: """+str(math.ceil(outline_roundness_v))+"""px;
 }
 """
 
         with open("/home/scripterblox/.config/waybar/cols.css", "w") as file:
             file.write(waybar_file)
+
+
+        # Handle Hyprland
+        hypr_file = """general {
+  col.active_border = rgba("""+str("%02x%02x%02x%02x" % (math.ceil(outline_r), math.ceil(outline_g), math.ceil(outline_b), math.ceil(outline_a*255)))+""")
+  col.inactive_border = rgba("""+"888888ff"+""")
+  border_size = """+str(math.ceil(outline_thickness_v))+"""
+}
+
+decoration {
+  rounding = """+str(math.ceil(outline_roundness_v))+"""
+}"""
+
+        with open("/home/scripterblox/.config/hypr/out_and_round.conf", "w") as file:
+            file.write(hypr_file)
+
+
+        # Handle conf file
+        conf_file = """outl_col """+str(math.ceil(outline_r))+""" """+str(math.ceil(outline_g))+""" """+str(math.ceil(outline_b))+""" """+str(math.ceil(outline_a))+"""
+txt_col """+str(math.ceil(txt_r))+""" """+str(math.ceil(txt_g))+""" """+str(math.ceil(txt_b))+""" """+str(math.ceil(txt_a))+"""
+bg_col """+str(math.ceil(bg_r))+""" """+str(math.ceil(bg_g))+""" """+str(math.ceil(bg_b))+""" """+str(math.ceil(bg_a))+"""
+thick """+str(math.ceil(outline_thickness_v))+"""
+round """+str(math.ceil(outline_roundness_v))+"""
+        """
+
+        with open("/home/scripterblox/.tile.conf", "w") as file:
+            file.write(conf_file)
+
+        #subprocess.run(["pkill", "waybar"]) 
+        #subprocess.run(["waybar"])
 
 
 def on_activate(app):
@@ -65,15 +134,19 @@ def on_activate(app):
     outline_col_a_label = Gtk.Label(label="A")
     outline_col_r_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 255, 1)
     outline_col_r_scale.set_hexpand(True)
+    outline_col_r_scale.set_value(outline_r)
     outline_col_r_scale.connect("value-changed", lambda x: globals().__setitem__("outline_r", x.get_value()))
     outline_col_g_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 255, 1)
-    outline_col_r_scale.set_hexpand(True)
+    outline_col_g_scale.set_hexpand(True)
+    outline_col_g_scale.set_value(outline_g)
     outline_col_g_scale.connect("value-changed", lambda x: globals().__setitem__("outline_g", x.get_value()))
     outline_col_b_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 255, 1)
-    outline_col_r_scale.set_hexpand(True)
+    outline_col_b_scale.set_hexpand(True)
+    outline_col_b_scale.set_value(outline_b)
     outline_col_b_scale.connect("value-changed", lambda x: globals().__setitem__("outline_b", x.get_value()))
     outline_col_a_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 1, 0.05)
     outline_col_a_scale.set_hexpand(True)
+    outline_col_a_scale.set_value(outline_a)
     outline_col_a_scale.connect("value-changed", lambda x: globals().__setitem__("outline_a", x.get_value()))
     
     outline_col_box = Gtk.Grid()
@@ -99,15 +172,19 @@ def on_activate(app):
     waybar_col_a_label = Gtk.Label(label="A")
     waybar_col_r_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 255, 1)
     waybar_col_r_scale.set_hexpand(True)
+    waybar_col_r_scale.set_value(txt_r)
     waybar_col_r_scale.connect("value-changed", lambda x: globals().__setitem__("txt_r", x.get_value()))
     waybar_col_g_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 255, 1)
-    waybar_col_r_scale.set_hexpand(True)
+    waybar_col_g_scale.set_hexpand(True)
+    waybar_col_g_scale.set_value(txt_g)
     waybar_col_g_scale.connect("value-changed", lambda x: globals().__setitem__("txt_g", x.get_value()))
     waybar_col_b_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 255, 1)
-    waybar_col_r_scale.set_hexpand(True)
+    waybar_col_b_scale.set_hexpand(True)
+    waybar_col_b_scale.set_value(txt_b)
     waybar_col_b_scale.connect("value-changed", lambda x: globals().__setitem__("txt_b", x.get_value()))
     waybar_col_a_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 1, 0.05)
     waybar_col_a_scale.set_hexpand(True)
+    waybar_col_a_scale.set_value(txt_a)
     waybar_col_a_scale.connect("value-changed", lambda x: globals().__setitem__("txt_a", x.get_value()))
     
     waybar_col_box = Gtk.Grid()
@@ -130,15 +207,19 @@ def on_activate(app):
     waybar_background_a_label = Gtk.Label(label="A")
     waybar_background_r_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 255, 1)
     waybar_background_r_scale.set_hexpand(True)
+    waybar_background_r_scale.set_value(bg_r)
     waybar_background_r_scale.connect("value-changed", lambda x: globals().__setitem__("bg_r", x.get_value()))
     waybar_background_g_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 255, 1)
     waybar_background_g_scale.set_hexpand(True)
+    waybar_background_g_scale.set_value(bg_g)
     waybar_background_g_scale.connect("value-changed", lambda x: globals().__setitem__("bg_g", x.get_value()))
     waybar_background_b_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 255, 1)
     waybar_background_b_scale.set_hexpand(True)
+    waybar_background_b_scale.set_value(bg_b)
     waybar_background_b_scale.connect("value-changed", lambda x: globals().__setitem__("bg_b", x.get_value()))
     waybar_background_a_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 1, 0.05)
     waybar_background_a_scale.set_hexpand(True)
+    waybar_background_a_scale.set_value(bg_a)
     waybar_background_a_scale.connect("value-changed", lambda x: globals().__setitem__("bg_a", x.get_value()))
     
     waybar_background_box = Gtk.Grid()
@@ -162,6 +243,7 @@ def on_activate(app):
     outline_thickness_label = Gtk.Label(label="Outline Thickness")
     outline_thickness_selector = Gtk.SpinButton()
     outline_thickness_selector.props.adjustment = Gtk.Adjustment(upper=50, step_increment=1)
+    outline_thickness_selector.set_value(outline_thickness_v)
     outline_thickness_selector.connect("value-changed", lambda x: globals().__setitem__("outline_thickness_v", x.get_value()))
 
     outline_thickness = Gtk.Grid()
@@ -172,6 +254,7 @@ def on_activate(app):
     outline_roundness_label = Gtk.Label(label="Outline Roundness")
     outline_roundness_selector = Gtk.SpinButton()
     outline_roundness_selector.props.adjustment = Gtk.Adjustment(upper=50, step_increment=1)
+    outline_roundness_selector.set_value(outline_roundness_v)
     outline_roundness_selector.connect("value-changed", lambda x: globals().__setitem__("outline_roundness_v", x.get_value()))
     
     outline_roundness = Gtk.Grid()
